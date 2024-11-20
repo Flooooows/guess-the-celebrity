@@ -1,42 +1,43 @@
-const DBPEDIA_SPARQL_URL = "http://dbpedia.org/sparql";
+const WIKIDATA_SPARQL_URL = "https://query.wikidata.org/sparql";
+
 let currentScore = 0;
 let bestScore = 0;
 let currentFigure = null;
 
-// Récupérer un personnage historique depuis DBpedia
+// Récupérer une personnalité célèbre depuis WikiData
 async function getHistoricalFigure() {
   const query = `
-    SELECT ?person ?name ?thumbnail
+    SELECT ?person ?personLabel ?image
     WHERE {
-      ?person a dbo:Person ;
-              foaf:name ?name ;
-              dbo:thumbnail ?thumbnail .
-      FILTER (LANG(?name) = 'en')
+      ?person wdt:P31 wd:Q5;  # Filtrer pour les êtres humains
+              wdt:P106 wd:Q901;  # Occupation : scientifique
+              wdt:P18 ?image.    # Avec une image disponible
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
     }
-    LIMIT 50
+    LIMIT 500
   `;
-  
-  const url = `${DBPEDIA_SPARQL_URL}?query=${encodeURIComponent(query)}&format=json`;
+
+  const url = `${WIKIDATA_SPARQL_URL}?query=${encodeURIComponent(query)}&format=json`;
 
   const response = await fetch(url);
   const data = await response.json();
 
   const results = data.results.bindings;
+
   if (!results || results.length === 0) {
-    throw new Error("Aucun personnage trouvé");
+    throw new Error("Aucune personnalité trouvée");
   }
 
-  // Sélectionner un personnage aléatoire
   const randomIndex = Math.floor(Math.random() * results.length);
   const person = results[randomIndex];
 
   return {
-    name: person.name.value,
-    image: person.thumbnail.value,
+    name: person.personLabel.value,
+    image: person.image.value,
   };
 }
 
-// Afficher un personnage historique
+// Afficher une personnalité célèbre
 async function displayHistoricalFigure() {
   try {
     const figure = await getHistoricalFigure();
@@ -46,22 +47,21 @@ async function displayHistoricalFigure() {
     const feedback = document.getElementById("feedback");
     const nameInput = document.getElementById("historical-name");
 
-    // Afficher l'image et le résumé du personnage
     photo.src = figure.image;
-    photo.alt = `Personnage historique : ${figure.name}`;
+    photo.alt = `Personnalité : ${figure.name}`;
 
-    // Réinitialiser l'input et le feedback
     nameInput.value = "";
     feedback.textContent = "";
 
-    // Associer les événements de clics aux boutons
     document.getElementById("validate-historical").onclick = () =>
       validateHistoricalFigure(figure);
     document.getElementById("skip-historical").onclick = () =>
       skipHistoricalFigure(figure);
   } catch (error) {
-    console.error("Erreur lors de l'affichage du personnage :", error);
-    displayHistoricalFigure(); // Relancer si une erreur survient
+    const feedback = document.getElementById("feedback");
+    feedback.textContent = "Erreur : Impossible de charger une personnalité.";
+    feedback.style.color = "red";
+    console.error("Erreur lors de l'affichage de la personnalité :", error);
   }
 }
 
@@ -96,7 +96,7 @@ function validateHistoricalFigure(figure) {
   }
 }
 
-// Passer le personnage
+// Passer la personnalité
 function skipHistoricalFigure(figure) {
   const feedback = document.getElementById("feedback");
   feedback.textContent = `Raté ! C'était : ${figure.name}`;
@@ -108,12 +108,12 @@ function skipHistoricalFigure(figure) {
   setTimeout(displayHistoricalFigure, 1000);
 }
 
-// Normaliser les chaînes pour comparer les réponses
+// Normaliser les chaînes
 function normalizeString(str) {
   return str
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "") // Supprimer les accents
-    .replace(/[^a-zA-Z0-9 ]/g, "") // Supprimer les caractères spéciaux
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9 ]/g, "")
     .toLowerCase();
 }
 
