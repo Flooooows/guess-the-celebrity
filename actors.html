@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acteurs</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script-actors.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <button onclick="window.location.href='index.html'" class="btn back-btn">Retour à l'index</button>
+
+    <h1>Devine l'acteur</h1>
+    <div class="photo-container">
+      <img id="celebrity-photo" src="" alt="Photo de célébrité">
+    </div>
+    <div class="input-container">
+      <input id="celebrity-name" type="text" placeholder="Entrez le nom">
+      <button id="validate" class="btn">Valider</button>
+      <button id="skip" class="btn">Passer</button>
+    </div>
+    <p id="feedback"></p>
+    <div class="score-container">
+      <p>Score : <span id="current-score">0</span></p>
+      <p>Meilleur score : <span id="best-score">0</span></p>
+    </div>
+  </div>
+</body>
+</html>

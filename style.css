@@ -1,0 +1,149 @@
+/* Réinitialisation générale */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #000; /* Fond noir */
+    color: #fff; /* Texte blanc */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  
+  /* Conteneur principal */
+  .container {
+    text-align: center;
+    width: 90%;
+    max-width: 500px;
+  }
+  
+  /* Titre principal */
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  /* Conteneur de la photo */
+  .photo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  img {
+    width: 100%;
+    max-width: 600px; /* Taille augmentée */
+    height: auto;
+    border: 5px solid #fff; /* Bordure blanche */
+    border-radius: 10px; /* Coins arrondis */
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); /* Ombre douce autour de l'image */
+  }
+  
+  /* Feedback de la réponse */
+  #feedback {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 20px 0;
+  }
+  
+
+  
+  /* Champ de texte */
+  input[type="text"] {
+    width: 80%;
+    max-width: 300px;
+    padding: 10px;
+    font-size: 1rem;
+    border: 2px solid #fff;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+  }
+  
+
+
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #000;
+    background-color: #fff;
+    border: 2px solid #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin: 5px; /* Ajout pour espacer les boutons */
+  }
+  
+  
+  .btn:hover {
+    background-color: #000;
+    color: #fff;
+  }
+  
+  /* Conteneur des scores */
+  .score-container {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.2rem;
+  }
+  
+  /* Style de base pour toutes les pages */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #000; /* Fond noir */
+    color: #fff; /* Texte blanc */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  
+  /* Conteneur principal */
+  .container {
+    text-align: center;
+    width: 90%;
+    max-width: 600px;
+  }
+  
+  /* Titre principal */
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+  }
+  
+  /* Boutons */
+  .btn {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #000;
+    background-color: #fff;
+    border: 2px solid #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin: 10px; /* Espacement entre les boutons */
+  }
+  
+  .btn:hover {
+    background-color: #000;
+    color: #fff;
+  }
+  
+  /* Bouton de retour */
+  .back-btn {
+    margin-top: 20px;
+    font-size: 1rem;
+    padding: 10px 20px;
+  }
+  
