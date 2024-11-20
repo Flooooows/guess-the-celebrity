@@ -30,17 +30,18 @@ async function getRandomArtist() {
   );
   const data = await response.json();
 
-  // Filtrer pour conserver uniquement les artistes les plus populaires
-  const popularArtists = data.artists.items.filter(artist => artist.popularity >= 70);
+  // Filtrer les artistes pour exclure ceux sans image
+  const artistsWithImages = data.artists.items.filter(artist => artist.images && artist.images.length > 0);
 
-  if (popularArtists.length === 0) {
-    return getRandomArtist(); // Relancer si aucun artiste populaire trouvé
+  if (artistsWithImages.length === 0) {
+    return getRandomArtist(); // Relancer si aucun artiste valide trouvé
   }
 
-  // Choisir un artiste populaire aléatoire
-  const randomIndex = Math.floor(Math.random() * popularArtists.length);
-  return popularArtists[randomIndex];
+  // Choisir un artiste avec une image valide
+  const randomIndex = Math.floor(Math.random() * artistsWithImages.length);
+  return artistsWithImages[randomIndex];
 }
+
 
 
 window.onload = () => {
