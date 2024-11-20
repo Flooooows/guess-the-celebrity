@@ -3,7 +3,7 @@ body, html {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    overflow-x: hidden; /* Évite le défilement horizontal */
+    overflow: hidden; /* Évite le défilement horizontal et vertical */
   }
   
   body {
@@ -13,22 +13,25 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    height: 100vh; /* Hauteur fixe pour éviter le scroll vertical */
     text-align: center;
   }
   
   /* Conteneur principal */
   .container {
     text-align: center;
-    width: 90%;
+    width: 100%; /* Occupe toute la largeur */
     max-width: 500px; /* Largeur maximale */
     padding: 20px;
+    box-sizing: border-box; /* Inclut le padding dans la taille */
+    overflow: hidden; /* Assure qu'aucun élément ne dépasse */
   }
   
   /* Titre principal */
   h1 {
     font-size: 2.5rem;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+    word-wrap: break-word; /* Permet au texte de se casser si nécessaire */
   }
   
   /* Conteneur de la photo */
@@ -40,25 +43,25 @@ body, html {
   }
   
   img {
-    width: 100%;
-    max-width: 350px; /* Taille réduite et responsive */
-    height: auto;
+    width: 100%; /* Adapte l'image à la largeur disponible */
+    max-width: 300px; /* Taille maximale pour l'image */
+    height: auto; /* Maintient les proportions */
     border: 5px solid #fff; /* Bordure blanche */
     border-radius: 10px; /* Coins arrondis */
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); /* Ombre douce autour de l'image */
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); /* Ombre douce */
   }
   
   /* Feedback de la réponse */
   #feedback {
     font-size: 1.2rem;
     font-weight: bold;
-    margin: 20px 0;
+    margin: 15px 0;
   }
   
   /* Conteneur des scores */
   .score-container {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 15px;
     font-size: 1.2rem;
   }
   
@@ -67,13 +70,13 @@ body, html {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px; /* Espacement entre les éléments */
+    gap: 10px; /* Espacement réduit entre les éléments */
   }
   
   /* Champ de texte */
   input[type="text"] {
-    width: 80%;
-    max-width: 300px;
+    width: 90%; /* Utilise une large partie de la page */
+    max-width: 300px; /* Limite pour éviter le débordement */
     padding: 10px;
     font-size: 1rem;
     border: 2px solid #fff;
@@ -93,7 +96,6 @@ body, html {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
-    margin: 5px; /* Espacement entre les boutons */
   }
   
   .btn:hover {
@@ -115,16 +117,15 @@ body, html {
     }
   
     img {
-      max-width: 280px; /* Taille de l'image ajustée pour petits écrans */
+      max-width: 250px; /* Taille de l'image ajustée pour petits écrans */
     }
   
     input[type="text"] {
-      width: 90%; /* Champ texte plus large sur petits écrans */
-      font-size: 0.9rem;
+      font-size: 0.9rem; /* Texte plus petit */
     }
   
     .btn {
-      font-size: 1rem; /* Taille des boutons ajustée */
+      font-size: 1rem;
       padding: 8px 16px;
     }
   
