@@ -75,7 +75,7 @@ async function displayActor() {
       document.getElementById('best-score').textContent = bestScore;
   
       // Charger un nouvel acteur après 2 secondes
-      setTimeout(displayActor, 2000);
+      setTimeout(displayActor, 1000);
     } else {
       feedback.textContent = `Faux ! C'était : ${actor.name}`;
       feedback.style.color = 'red';
@@ -85,7 +85,7 @@ async function displayActor() {
       document.getElementById('current-score').textContent = currentScore;
   
       // Charger un nouvel acteur après 2 secondes
-      setTimeout(displayActor, 2000);
+      setTimeout(displayActor, 1000);
     }
   };
   

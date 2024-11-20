@@ -93,7 +93,7 @@ async function displayArtist() {
       document.getElementById('best-score').textContent = bestScore;
   
       // Charger un nouvel artiste après 2 secondes
-      setTimeout(displayArtist, 2000);
+      setTimeout(displayArtist, 1000);
     } else {
       feedback.textContent = `Faux ! C'était : ${artist.name}`;
       feedback.style.color = 'red';
@@ -103,7 +103,7 @@ async function displayArtist() {
       document.getElementById('current-score').textContent = currentScore;
   
       // Charger un nouvel artiste après 2 secondes
-      setTimeout(displayArtist, 2000);
+      setTimeout(displayArtist, 1000);
     }
   };
   
