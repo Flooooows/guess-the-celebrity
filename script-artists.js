@@ -125,7 +125,7 @@ async function displayArtist() {
     document.getElementById('current-score').textContent = currentScore;
 
     // Charger un nouvel artiste après 2 secondes
-    setTimeout(displayArtist, 2000);
+    setTimeout(displayArtist, 1000);
   };
 
 

@@ -106,7 +106,7 @@ async function displayActor() {
     document.getElementById('current-score').textContent = currentScore;
 
     // Charger un nouvel acteur après 2 secondes
-    setTimeout(displayActor, 2000);
+    setTimeout(displayActor, 1000);
   };
 
 }
