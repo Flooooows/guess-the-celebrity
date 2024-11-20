@@ -3,26 +3,41 @@ let currentScore = 0;
 let bestScore = 0;
 let currentFigure = null;
 
-// Récupérer un personnage historique aléatoire
+// Récupérer un personnage historique avec des mots-clés
 async function getHistoricalFigure() {
-  const url = `${WIKIPEDIA_API_URL}?action=query&format=json&generator=random&grnnamespace=0&prop=pageimages|extracts&exchars=200&exintro&explaintext&piprop=original&origin=*`;
+  const url = `${WIKIPEDIA_API_URL}?action=query&format=json&list=search&srsearch=historical figure|biography&srnamespace=0&prop=pageimages|extracts&piprop=original&pilimit=1&exchars=200&exintro&explaintext&origin=*`;
 
   const response = await fetch(url);
   const data = await response.json();
 
-  const pages = data.query.pages;
-  const pageId = Object.keys(pages)[0];
-  const figure = pages[pageId];
+  if (!data.query.search || data.query.search.length === 0) {
+    return getHistoricalFigure(); // Relancer si aucun résultat trouvé
+  }
 
-  // Vérifier si le personnage a une image
-  if (!figure.original || !figure.original.source) {
-    return getHistoricalFigure(); // Relancer si aucune image disponible
+  // Récupérer un article aléatoire parmi les résultats
+  const randomIndex = Math.floor(Math.random() * data.query.search.length);
+  const searchResult = data.query.search[randomIndex];
+  const pageTitle = searchResult.title;
+
+  // Faire une requête pour obtenir les détails de la page
+  const detailsUrl = `${WIKIPEDIA_API_URL}?action=query&format=json&titles=${encodeURIComponent(
+    pageTitle
+  )}&prop=pageimages|extracts&piprop=original&exchars=200&exintro&explaintext&origin=*`;
+
+  const detailsResponse = await fetch(detailsUrl);
+  const detailsData = await detailsResponse.json();
+
+  const page = Object.values(detailsData.query.pages)[0];
+
+  // Vérifier si la page contient une image
+  if (!page.original || !page.original.source) {
+    return getHistoricalFigure(); // Relancer si aucune image trouvée
   }
 
   return {
-    name: figure.title,
-    image: figure.original.source,
-    description: figure.extract,
+    name: page.title,
+    image: page.original.source,
+    description: page.extract,
   };
 }
 
