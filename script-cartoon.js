@@ -6,7 +6,7 @@ let currentCharacter = null;
 
 // Récupérer un personnage aléatoire
 async function getRandomCartoonCharacter() {
-  const randomPage = Math.floor(Math.random() * 10) + 1; // Pages 1 à 10
+  const randomPage = Math.floor(Math.random() * 300) + 1; // Pages 1 à 10
 
   // Requête GraphQL
   const query = `

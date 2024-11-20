@@ -1,43 +1,38 @@
-const WIKIPEDIA_API_URL = "https://en.wikipedia.org/w/api.php";
+const DBPEDIA_SPARQL_URL = "http://dbpedia.org/sparql";
 let currentScore = 0;
 let bestScore = 0;
 let currentFigure = null;
 
-// Récupérer un personnage historique avec des mots-clés
+// Récupérer un personnage historique depuis DBpedia
 async function getHistoricalFigure() {
-  const url = `${WIKIPEDIA_API_URL}?action=query&format=json&list=search&srsearch=historical figure|biography&srnamespace=0&prop=pageimages|extracts&piprop=original&pilimit=1&exchars=200&exintro&explaintext&origin=*`;
+  const query = `
+    SELECT ?person ?name ?thumbnail
+    WHERE {
+      ?person a dbo:Person ;
+              foaf:name ?name ;
+              dbo:thumbnail ?thumbnail .
+      FILTER (LANG(?name) = 'en')
+    }
+    LIMIT 50
+  `;
+  
+  const url = `${DBPEDIA_SPARQL_URL}?query=${encodeURIComponent(query)}&format=json`;
 
   const response = await fetch(url);
   const data = await response.json();
 
-  if (!data.query.search || data.query.search.length === 0) {
-    return getHistoricalFigure(); // Relancer si aucun résultat trouvé
+  const results = data.results.bindings;
+  if (!results || results.length === 0) {
+    throw new Error("Aucun personnage trouvé");
   }
 
-  // Récupérer un article aléatoire parmi les résultats
-  const randomIndex = Math.floor(Math.random() * data.query.search.length);
-  const searchResult = data.query.search[randomIndex];
-  const pageTitle = searchResult.title;
-
-  // Faire une requête pour obtenir les détails de la page
-  const detailsUrl = `${WIKIPEDIA_API_URL}?action=query&format=json&titles=${encodeURIComponent(
-    pageTitle
-  )}&prop=pageimages|extracts&piprop=original&exchars=200&exintro&explaintext&origin=*`;
-
-  const detailsResponse = await fetch(detailsUrl);
-  const detailsData = await detailsResponse.json();
-
-  const page = Object.values(detailsData.query.pages)[0];
-
-  // Vérifier si la page contient une image
-  if (!page.original || !page.original.source) {
-    return getHistoricalFigure(); // Relancer si aucune image trouvée
-  }
+  // Sélectionner un personnage aléatoire
+  const randomIndex = Math.floor(Math.random() * results.length);
+  const person = results[randomIndex];
 
   return {
-    name: page.title,
-    image: page.original.source,
-    description: page.extract,
+    name: person.name.value,
+    image: person.thumbnail.value,
   };
 }
 
