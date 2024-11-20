@@ -31,7 +31,7 @@ async function getRandomArtist() {
   const data = await response.json();
 
   // Filtrer pour conserver uniquement les artistes les plus populaires
-  const popularArtists = data.artists.items.filter(artist => artist.popularity >= 90);
+  const popularArtists = data.artists.items.filter(artist => artist.popularity >= 70);
 
   if (popularArtists.length === 0) {
     return getRandomArtist(); // Relancer si aucun artiste populaire trouvé
