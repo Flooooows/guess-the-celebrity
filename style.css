@@ -1,6 +1,12 @@
-/* Réinitialisation générale */
-body {
+/* Réinitialisation globale */
+body, html {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden; /* Évite le défilement horizontal */
+  }
+  
+  body {
     font-family: Arial, sans-serif;
     background-color: #000; /* Fond noir */
     color: #fff; /* Texte blanc */
@@ -8,19 +14,21 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    text-align: center;
   }
   
   /* Conteneur principal */
   .container {
     text-align: center;
     width: 90%;
-    max-width: 500px;
+    max-width: 500px; /* Largeur maximale */
+    padding: 20px;
   }
   
   /* Titre principal */
   h1 {
-    font-size: 2rem;
-    margin-bottom: 20px;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
   }
   
   /* Conteneur de la photo */
@@ -33,7 +41,7 @@ body {
   
   img {
     width: 100%;
-    max-width: 600px; /* Taille augmentée */
+    max-width: 350px; /* Taille réduite et responsive */
     height: auto;
     border: 5px solid #fff; /* Bordure blanche */
     border-radius: 10px; /* Coins arrondis */
@@ -47,7 +55,20 @@ body {
     margin: 20px 0;
   }
   
-
+  /* Conteneur des scores */
+  .score-container {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.2rem;
+  }
+  
+  /* Conteneur de l'entrée utilisateur */
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* Espacement entre les éléments */
+  }
   
   /* Champ de texte */
   input[type="text"] {
@@ -61,18 +82,10 @@ body {
     color: #fff;
   }
   
-
-
-  .input-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-  }
-  
+  /* Boutons */
   .btn {
     padding: 10px 20px;
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: bold;
     color: #000;
     background-color: #fff;
@@ -80,59 +93,7 @@ body {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
-    margin: 5px; /* Ajout pour espacer les boutons */
-  }
-  
-  
-  .btn:hover {
-    background-color: #000;
-    color: #fff;
-  }
-  
-  /* Conteneur des scores */
-  .score-container {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 1.2rem;
-  }
-  
-  /* Style de base pour toutes les pages */
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #000; /* Fond noir */
-    color: #fff; /* Texte blanc */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-  }
-  
-  /* Conteneur principal */
-  .container {
-    text-align: center;
-    width: 90%;
-    max-width: 600px;
-  }
-  
-  /* Titre principal */
-  h1 {
-    font-size: 2.5rem;
-    margin-bottom: 30px;
-  }
-  
-  /* Boutons */
-  .btn {
-    padding: 15px 30px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #000;
-    background-color: #fff;
-    border: 2px solid #fff;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    margin: 10px; /* Espacement entre les boutons */
+    margin: 5px; /* Espacement entre les boutons */
   }
   
   .btn:hover {
@@ -145,5 +106,31 @@ body {
     margin-top: 20px;
     font-size: 1rem;
     padding: 10px 20px;
+  }
+  
+  /* Responsive : ajustement pour petits écrans */
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 2rem; /* Taille du titre réduite */
+    }
+  
+    img {
+      max-width: 280px; /* Taille de l'image ajustée pour petits écrans */
+    }
+  
+    input[type="text"] {
+      width: 90%; /* Champ texte plus large sur petits écrans */
+      font-size: 0.9rem;
+    }
+  
+    .btn {
+      font-size: 1rem; /* Taille des boutons ajustée */
+      padding: 8px 16px;
+    }
+  
+    .back-btn {
+      font-size: 0.9rem;
+      padding: 8px 16px;
+    }
   }
   
