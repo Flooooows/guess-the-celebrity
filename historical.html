@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personnages Historiques</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script-historical.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Devinez le personnage historique</h1>
+    <div class="photo-container">
+      <img id="historical-photo" src="" alt="Personnage historique">
+    </div>
+    <div class="input-container">
+      <input id="historical-name" type="text" placeholder="Entrez le nom du personnage">
+      <button id="validate-historical" class="btn">Valider</button>
+      <button id="skip-historical" class="btn">Passer</button>
+    </div>
+    <p id="feedback"></p>
+    <div class="score-container">
+      <p>Score : <span id="current-score">0</span></p>
+      <p>Meilleur score : <span id="best-score">0</span></p>
+    </div>
+    <button onclick="window.location.href='index.html'" class="btn back-btn">Retour à l'index</button>
+  </div>
+</body>
+</html>
