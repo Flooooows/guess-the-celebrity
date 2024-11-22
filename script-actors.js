@@ -6,7 +6,7 @@ let bestScore = 0;
 
 // Récupérer un acteur aléatoire
 async function getRandomActor() {
-  const randomPage = Math.floor(Math.random() * 150) + 1; // Pages 1 à 10
+  const randomPage = Math.floor(Math.random() * 30) + 1; // Pages 1 à 10
   const response = await fetch(`${BASE_URL}/person/popular?api_key=${API_KEY}&language=fr&page=${randomPage}`);
   const data = await response.json();
   const actors = data.results;
