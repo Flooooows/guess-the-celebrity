@@ -3,123 +3,136 @@ const BASE_URL = 'https://api.themoviedb.org/3';
 
 let currentScore = 0;
 let bestScore = 0;
+let currentActor = null;
 
-// Récupérer un acteur aléatoire
-async function getRandomActor() {
-  const randomPage = Math.floor(Math.random() * 30) + 1; // Pages 1 à 10
-  const response = await fetch(`${BASE_URL}/person/popular?api_key=${API_KEY}&language=fr&page=${randomPage}`);
+// Récupérer un acteur français aléatoire
+async function getRandomFrenchActor() {
+  const response = await fetch(
+    `${TMDB_API_URL}?api_key=${API_KEY}&language=en-US`
+  );
   const data = await response.json();
-  const actors = data.results;
 
-  // Filtrer les acteurs pour éviter ceux sans photo ou sans données connues
-  const popularActors = actors.filter(actor => actor.profile_path && actor.known_for.length > 0);
-
-  if (popularActors.length === 0) {
-    return getRandomActor(); // Relancer si aucun acteur populaire trouvé
+  if (!data.results || data.results.length === 0) {
+    throw new Error("Aucun acteur trouvé");
   }
 
-  const randomIndex = Math.floor(Math.random() * popularActors.length);
-  return popularActors[randomIndex];
-}
+  // Filtrer les acteurs français en fonction de leur biographie
+  const frenchActors = await Promise.all(
+    data.results.map(async (actor) => {
+      const actorDetailsResponse = await fetch(
+        `https://api.themoviedb.org/3/person/${actor.id}?api_key=${API_KEY}&language=en-US`
+      );
+      const actorDetails = await actorDetailsResponse.json();
 
-
-window.onload = () => {
-  const nameInput = document.getElementById('celebrity-name'); // Champ de saisie pour les acteurs
-  const validateButton = document.getElementById('validate'); // Bouton "Valider" pour les acteurs
-
-  // Écouteur pour activer "Valider" avec la touche Enter
-  nameInput.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-      validateButton.click(); // Simule un clic sur le bouton "Valider"
-    }
-  });
-
-  displayActor(); // Charger le premier acteur
-};
-
-
-// Afficher un acteur aléatoire
-async function displayActor() {
-  const actor = await getRandomActor();
-  const photo = document.getElementById('celebrity-photo');
-  const nameInput = document.getElementById('celebrity-name');
-  const feedback = document.getElementById('feedback');
-  const validateButton = document.getElementById('validate');
-
-  // Afficher la photo de l'acteur
-  if (actor.profile_path) {
-    photo.src = `https://image.tmdb.org/t/p/w500${actor.profile_path}`;
-  } else {
-    photo.alt = 'Aucune photo disponible';
-  }
-
-  // Réinitialiser l'input et le feedback
-  nameInput.value = '';
-  feedback.textContent = '';
-
-  // Valider la réponse
-  validateButton.onclick = () => {
-    const userInput = normalizeString(nameInput.value.trim());
-    const correctName = normalizeString(actor.name);
-  
-    if (userInput === correctName) {
-      feedback.textContent = 'Bonne réponse !';
-      feedback.style.color = 'green';
-  
-      // Mettre à jour le score
-      currentScore++;
-      if (currentScore > bestScore) {
-        bestScore = currentScore;
+      // Vérifier si la biographie mentionne "French"
+      if (
+        actorDetails.biography &&
+        actorDetails.biography.toLowerCase().includes("french")
+      ) {
+        return {
+          name: actorDetails.name,
+          image: actorDetails.profile_path
+            ? `https://image.tmdb.org/t/p/w500${actorDetails.profile_path}`
+            : null,
+        };
       }
-      document.getElementById('current-score').textContent = currentScore;
-      document.getElementById('best-score').textContent = bestScore;
-  
-      // Charger un nouvel acteur après 2 secondes
-      setTimeout(displayActor, 1000);
-    } else {
-      feedback.textContent = `Faux ! C'était : ${actor.name}`;
-      feedback.style.color = 'red';
-  
-      // Réinitialiser le score
-      currentScore = 0;
-      document.getElementById('current-score').textContent = currentScore;
-  
-      // Charger un nouvel acteur après 2 secondes
-      setTimeout(displayActor, 1000);
-    }
-  };
-  
+      return null;
+    })
+  );
 
-  
-  const skipButton = document.getElementById('skip');
+  const validFrenchActors = frenchActors.filter(Boolean);
 
-  // Action lorsque l'utilisateur clique sur "Passer"
-  skipButton.onclick = () => {
-    const feedback = document.getElementById('feedback');
+  if (validFrenchActors.length === 0) {
+    throw new Error("Aucun acteur français trouvé");
+  }
 
-    // Afficher un message avec le nom de l'acteur que l'utilisateur a passé
-    feedback.textContent = `Raté ! C'était : ${actor.name}`;
-    feedback.style.color = 'red';
-
-    // Réinitialiser le score
-    currentScore = 0;
-    document.getElementById('current-score').textContent = currentScore;
-
-    // Charger un nouvel acteur après 2 secondes
-    setTimeout(displayActor, 1000);
-  };
-
+  // Sélectionner un acteur aléatoire
+  const randomIndex = Math.floor(Math.random() * validFrenchActors.length);
+  return validFrenchActors[randomIndex];
 }
 
+// Afficher un acteur français aléatoire
+async function displayFrenchActor() {
+  try {
+    const actor = await getRandomFrenchActor();
+    currentActor = actor;
+
+    const photo = document.getElementById("actor-photo");
+    const feedback = document.getElementById("feedback");
+    const nameInput = document.getElementById("actor-name");
+
+    // Afficher l'image et le nom de l'acteur
+    photo.src = actor.image || "default-image.jpg"; // Image par défaut si aucune image disponible
+    photo.alt = `Acteur : ${actor.name}`;
+
+    // Réinitialiser l'input et le feedback
+    nameInput.value = "";
+    feedback.textContent = "";
+
+    // Associer les événements de clics aux boutons
+    document.getElementById("validate-actor").onclick = () =>
+      validateFrenchActor(actor);
+    document.getElementById("skip-actor").onclick = () =>
+      skipFrenchActor(actor);
+  } catch (error) {
+    const feedback = document.getElementById("feedback");
+    feedback.textContent = "Erreur : Impossible de charger un acteur.";
+    feedback.style.color = "red";
+    console.error("Erreur lors de l'affichage de l'acteur :", error);
+  }
+}
+
+// Valider la réponse
+function validateFrenchActor(actor) {
+  const nameInput = document
+    .getElementById("actor-name")
+    .value.trim()
+    .toLowerCase();
+  const feedback = document.getElementById("feedback");
+
+  if (normalizeString(nameInput) === normalizeString(actor.name)) {
+    feedback.textContent = "Bonne réponse !";
+    feedback.style.color = "green";
+
+    currentScore++;
+    if (currentScore > bestScore) {
+      bestScore = currentScore;
+    }
+    document.getElementById("current-score").textContent = currentScore;
+    document.getElementById("best-score").textContent = bestScore;
+
+    setTimeout(displayFrenchActor, 1000);
+  } else {
+    feedback.textContent = `Faux ! C'était : ${actor.name}`;
+    feedback.style.color = "red";
+
+    currentScore = 0;
+    document.getElementById("current-score").textContent = currentScore;
+
+    setTimeout(displayFrenchActor, 1000);
+  }
+}
+
+// Passer l'acteur
+function skipFrenchActor(actor) {
+  const feedback = document.getElementById("feedback");
+  feedback.textContent = `Raté ! C'était : ${actor.name}`;
+  feedback.style.color = "red";
+
+  currentScore = 0;
+  document.getElementById("current-score").textContent = currentScore;
+
+  setTimeout(displayFrenchActor, 1000);
+}
+
+// Normaliser les chaînes pour comparer les réponses
 function normalizeString(str) {
   return str
-    .normalize("NFD") // Décompose les caractères accentués (é → e + ´)
-    .replace(/[\u0300-\u036f]/g, "") // Supprime les marques diacritiques (accents)
-    .replace(/[^a-zA-Z]/g, "") // Supprime tous les caractères non alphabétiques
-    .toLowerCase(); // Convertit en minuscule
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9 ]/g, "")
+    .toLowerCase();
 }
 
-
-
-// Démarrer le jeu
-displayActor();
+// Initialiser la page
+window.onload = displayFrenchActor;
