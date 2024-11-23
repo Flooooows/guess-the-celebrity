@@ -18,7 +18,7 @@ async function getSpotifyToken() {
   return data.access_token;
 }
 
-// Rechercher un artiste aléatoire
+// Rechercher un artiste aléatoire parmi les plus populaires
 async function getRandomArtist() {
   const token = await getSpotifyToken();
   const randomLetter = String.fromCharCode(97 + Math.floor(Math.random() * 26)); // Lettres 'a' à 'z'
@@ -30,32 +30,22 @@ async function getRandomArtist() {
   );
   const data = await response.json();
 
-  // Filtrer les artistes pour exclure ceux sans image
-  const artistsWithImages = data.artists.items.filter(artist => artist.images && artist.images.length > 0);
+  // Filtrer les artistes pour exclure ceux sans image et non populaires
+  const artistsWithImages = data.artists.items.filter(
+    artist =>
+      artist.images &&
+      artist.images.length > 0 &&
+      artist.popularity > 80 // Popularité minimale
+  );
 
   if (artistsWithImages.length === 0) {
     return getRandomArtist(); // Relancer si aucun artiste valide trouvé
   }
 
-  // Choisir un artiste avec une image valide
+  // Sélectionner un artiste avec une image valide
   const randomIndex = Math.floor(Math.random() * artistsWithImages.length);
   return artistsWithImages[randomIndex];
 }
-
-
-
-window.onload = () => {
-  const nameInput = document.getElementById('artist-name'); // Ou 'celebrity-name' pour les acteurs
-  const validateButton = document.getElementById('validate-artist'); // Ou 'validate' pour les acteurs
-
-  nameInput.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-      validateButton.click(); // Simule un clic sur le bouton "Valider"
-    }
-  });
-
-  displayArtist(); // Charger le premier artiste
-};
 
 // Afficher un artiste aléatoire
 async function displayArtist() {
@@ -80,11 +70,11 @@ async function displayArtist() {
   validateButton.onclick = () => {
     const userInput = normalizeString(nameInput.value.trim());
     const correctName = normalizeString(artist.name);
-  
+
     if (userInput === correctName) {
       feedback.textContent = 'Bonne réponse !';
       feedback.style.color = 'green';
-  
+
       // Mettre à jour le score
       currentScore++;
       if (currentScore > bestScore) {
@@ -92,23 +82,21 @@ async function displayArtist() {
       }
       document.getElementById('current-score').textContent = currentScore;
       document.getElementById('best-score').textContent = bestScore;
-  
-      // Charger un nouvel artiste après 2 secondes
+
+      // Charger un nouvel artiste après 1 seconde
       setTimeout(displayArtist, 1000);
     } else {
       feedback.textContent = `Faux ! C'était : ${artist.name}`;
       feedback.style.color = 'red';
-  
+
       // Réinitialiser le score
       currentScore = 0;
       document.getElementById('current-score').textContent = currentScore;
-  
-      // Charger un nouvel artiste après 2 secondes
+
+      // Charger un nouvel artiste après 1 seconde
       setTimeout(displayArtist, 1000);
     }
   };
-  
-  
 
   const skipButton = document.getElementById('skip');
 
@@ -124,13 +112,12 @@ async function displayArtist() {
     currentScore = 0;
     document.getElementById('current-score').textContent = currentScore;
 
-    // Charger un nouvel artiste après 2 secondes
+    // Charger un nouvel artiste après 1 seconde
     setTimeout(displayArtist, 1000);
   };
-
-
 }
 
+// Normaliser les chaînes pour comparer les réponses
 function normalizeString(str) {
   return str
     .normalize("NFD") // Décompose les caractères accentués (é → e + ´)
@@ -138,3 +125,17 @@ function normalizeString(str) {
     .replace(/[^a-zA-Z]/g, "") // Supprime tous les caractères non alphabétiques
     .toLowerCase(); // Convertit en minuscule
 }
+
+// Initialiser la page
+window.onload = () => {
+  const nameInput = document.getElementById('artist-name');
+  const validateButton = document.getElementById('validate-artist');
+
+  nameInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      validateButton.click(); // Simule un clic sur le bouton "Valider"
+    }
+  });
+
+  displayArtist(); // Charger le premier artiste
+};
